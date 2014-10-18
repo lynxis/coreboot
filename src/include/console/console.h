@@ -75,6 +75,12 @@ static inline void do_vtxprintf(const char *fmt, va_list args) {};
  */
 #include <console/early_print.h>
 
+/* for the poor man's ftrace. */
+void __print_func_entry(const char *func, const char *file);
+void __print_func_exit(const char *func, const char *file);
+#define print_func_entry() __print_func_entry(__FUNCTION__, __FILE__)
+#define print_func_exit() __print_func_exit(__FUNCTION__, __FILE__)
+
 #else /* __ROMCC__ */
 
 #include "arch/x86/lib/romcc_console.c"

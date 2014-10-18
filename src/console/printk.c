@@ -12,6 +12,7 @@
 #include <smp/node.h>
 #include <stddef.h>
 #include <trace.h>
+#include <stdlib.h>
 
 DECLARE_SPIN_LOCK(console_lock)
 
@@ -62,3 +63,44 @@ void do_vtxprintf(const char *fmt, va_list args)
 	console_tx_flush();
 }
 #endif /* CONFIG_CHROMEOS */
+
+#ifdef __PRE_RAM__
+/* sadly, pretty printing the call depth in pre-ram is not an option. How sad! */
+
+void __print_func_entry(const char *func, const char *file)
+{
+	printk(BIOS_EMERG, "ENTER %s() in %s\n", func, file);
+}
+/* for tracing. You can call these on func entry and exit.
+ * Or, better, you can use the spatch in utils to add
+ * such tracing.
+ */
+void __print_func_exit(const char *func, const char *file)
+{
+	printk(BIOS_EMERG, "EXIT ---- %s()\n", func);
+}
+
+#else
+int tab_depth = 0;
+
+void __print_func_entry(const char *func, const char *file)
+{
+	char tentabs[] = "\t\t\t\t\t\t\t\t\t\t"; // ten tabs and a \0
+	char *ourtabs = &tentabs[10 - MIN(tab_depth, 10)];
+	printk(BIOS_EMERG, "%s%s() in %s\n", ourtabs, func, file);
+	tab_depth++;
+}
+/* for tracing. You can call these on func entry and exit.
+ * Or, better, you can use the spatch in utils to add
+ * such tracing.
+ */
+void __print_func_exit(const char *func, const char *file)
+{
+	char tentabs[] = "\t\t\t\t\t\t\t\t\t\t"; // ten tabs and a \0
+	char *ourtabs;
+	tab_depth--;
+	ourtabs = &tentabs[10 - MIN(tab_depth, 10)];
+	printk(BIOS_EMERG, "%s---- %s()\n", ourtabs, func);
+}
+
+#endif
