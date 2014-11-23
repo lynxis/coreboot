@@ -13,6 +13,8 @@ config BOARD_HP_E_VECTRA_P2706T
 	bool "e-Vectra P2706T"
 config BOARD_HP_PAVILION_M6_1035DX
 	bool "Pavilion m6 1035dx"
+config BOARD_HP_PROLIANT_MICROSERVER_G7
+	bool "ProLiant MicroServer G7"
 
 
 endchoice
@@ -22,6 +24,7 @@ source "src/mainboard/hp/dl145_g3/Kconfig"
 source "src/mainboard/hp/dl165_g6_fam10/Kconfig"
 source "src/mainboard/hp/e_vectra_p2706t/Kconfig"
 source "src/mainboard/hp/pavilion_m6_1035dx/Kconfig"
+source "src/mainboard/hp/proliant_microserver_g7/Kconfig"
 
 config MAINBOARD_VENDOR
 	string
