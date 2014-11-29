@@ -32,9 +32,33 @@ void set_pcie_dereset(void);
 void set_pcie_reset(void);
 void enable_int_gfx(void);
 
+/* from amd bimini_fam10/mainboard.c */
 /* GPIO6. */
 void enable_int_gfx(void)
 {
+	u8 byte;
+
+	volatile u8 *gpio_reg;
+
+	pm_iowrite(0xEA, 0x01);	/* diable the PCIB */
+	/* Disable Gec */
+	byte = pm_ioread(0xF6);
+	byte |= 1;
+	pm_iowrite(0xF6, byte);
+	/* make sure the fed80000 is accessible */
+	byte = pm_ioread(0x24);
+	byte |= 1;
+	pm_iowrite(0x24, byte);
+
+	gpio_reg = (volatile u8 *)0xFED80000 + 0xD00; /* IoMux Register */
+
+	*(gpio_reg + 0x6) = 0x1; /* Int_vga_en */
+	*(gpio_reg + 170) = 0x1; /* gpio_gate */
+
+	gpio_reg = (volatile u8 *)0xFED80000 + 0x100; /* GPIO Registers */
+
+	*(gpio_reg + 0x6) = 0x8;
+	*(gpio_reg + 170) = 0x0;
 }
 
 void set_pcie_dereset()
