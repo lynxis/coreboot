@@ -24,7 +24,7 @@
 #include <cpu/x86/msr.h>
 #include <cpu/amd/mtrr.h>
 #include <device/pci_def.h>
-#include "SBPLATFORM.h"
+#include <southbridge/amd/sb800/sb800.h>
 
 
 u8 is_dev3_present(void);
@@ -61,14 +61,30 @@ void enable_int_gfx(void)
 	*(gpio_reg + 170) = 0x0;
 }
 
-void set_pcie_dereset()
+/*
+ * Bimini uses GPIO 6 as PCIe slot reset, GPIO4 as GFX slot reset. We need to
+ * pull it up before training the slot.
+ ***/
+void set_pcie_dereset(void)
 {
+	/* GPIO 50h reset PCIe slot */
+
+	u8 *addr = (u8 *)(0xFED80000 + 0x100 + 0x50);
+	u8 byte = ~(1 << 5);
+	byte |= ~(1 << 6);
+	*addr = byte;
+
 }
 
 void set_pcie_reset(void)
 {
-}
+	/* GPIO 50h reset PCIe slot */
 
+	u8 *addr = (u8 *)(0xFED80000 + 0x100 + 0x50);
+	u8 byte = ~((1 << 5) | (1 << 6));
+	*addr = byte;
+
+}
 u8 is_dev3_present(void)
 {
 	return 0;
