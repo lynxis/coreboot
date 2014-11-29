@@ -35,24 +35,6 @@ void enable_int_gfx(void);
 /* GPIO6. */
 void enable_int_gfx(void)
 {
-	volatile u8 *gpio_reg;
-
-#ifdef UNUSED_CODE
-	RWPMIO(SB_PMIOA_REGEA, AccWidthUint8, ~(BIT0), BIT0); /* Disable the PCIB */
-	RWPMIO(SB_PMIOA_REGF6, AccWidthUint8, ~(BIT0), BIT0); /* Disable Gec */
-#endif
-	/* make sure the Acpi MMIO(fed80000) is accessible */
-        RWPMIO(SB_PMIOA_REG24, AccWidthUint8, ~(BIT0), BIT0);
-
-	gpio_reg = (volatile u8 *)ACPI_MMIO_BASE + 0xD00; /* IoMux Register */
-
-	*(gpio_reg + 0x6) = 0x1; /* Int_vga_en */
-	*(gpio_reg + 170) = 0x1; /* gpio_gate */
-
-	gpio_reg = (volatile u8 *)ACPI_MMIO_BASE + 0x100; /* GPIO Registers */
-
-	*(gpio_reg + 0x6) = 0x8;
-	*(gpio_reg + 170) = 0x0;
 }
 
 void set_pcie_dereset()
@@ -75,7 +57,7 @@ u8 is_dev3_present(void)
 *************************************************/
 static void mainboard_enable(device_t dev)
 {
-	printk(BIOS_INFO, "Mainboard A785E-I Enable. dev=0x%p\n", dev);
+	printk(BIOS_INFO, "Mainboard Enable HP ProLiant G7. dev=0x%p\n", dev);
 
 	set_pcie_dereset();
 	enable_int_gfx();
