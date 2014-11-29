@@ -68,7 +68,7 @@ chip northbridge/amd/amdfam10/root_complex
 					#register "gpp_configuration" = "0" #4:0:0:0
 					#register "gpp_configuration" = "2" #2:2:0:0
 					#register "gpp_configuration" = "3" #2:1:1:0
-					register "gpp_configuration" = "4" #1:1:1:1
+					#register "gpp_configuration" = "4" #1:1:1:1
 					register "boot_switch_sata_ide" = "0"	# 0: boot from SATA. 1: IDE
 				end	#southbridge/amd/cimx/sb800
 			end #  device pci 18.0
