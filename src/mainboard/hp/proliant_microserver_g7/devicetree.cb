@@ -6,6 +6,7 @@ chip northbridge/amd/amdfam10/root_complex
 		end
 	end
 	device domain 0 on
+    subsystemid 0x103c 0x1609 inherit
 		chip northbridge/amd/amdfam10
 			device pci 18.0 on #  northbridge
 				chip southbridge/amd/rs780
@@ -72,6 +73,12 @@ chip northbridge/amd/amdfam10/root_complex
 					register "boot_switch_sata_ide" = "0"	# 0: boot from SATA. 1: IDE
 				end	#southbridge/amd/cimx/sb800
 			end #  device pci 18.0
+      device pci 18.0 on end
+      device pci 18.0 on end
+      device pci 18.1 on end
+      device pci 18.2 on end
+      device pci 18.3 on end
+      device pci 18.4 on end
 		end
 	end #domain
 end
