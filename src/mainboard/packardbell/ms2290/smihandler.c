@@ -31,6 +31,9 @@
 #include <pc80/mc146818rtc.h>
 #include <delay.h>
 
+/* This GPI is not confirmed. */
+#define MS2290_ENABLE_GPI12	1
+
 /* The southbridge SMI handler checks whether gnvs has a
  * valid pointer before calling the trap handler
  */
@@ -69,15 +72,6 @@ static int mainboard_finalized = 0;
 
 int mainboard_smi_apmc(u8 data)
 {
-	u16 pmbase = pci_read_config16(PCI_DEV(0, 0x1f, 0), 0x40) & 0xfffc;
-	u8 tmp;
-
-	printk(BIOS_DEBUG, "%s: pmbase %04X, data %02X\n", __func__, pmbase,
-	       data);
-
-	if (!pmbase)
-		return 0;
-
 	switch (data) {
 	case APM_CNT_FINALIZE:
 		printk(BIOS_DEBUG, "APMC: FINALIZE\n");
@@ -94,16 +88,12 @@ int mainboard_smi_apmc(u8 data)
 		mainboard_finalized = 1;
 		break;
 	case APM_CNT_ACPI_ENABLE:
-		tmp = pci_read_config8(PCI_DEV(0, 0x1f, 0), 0xbb);
-		tmp &= ~0x03;
-		tmp |= 0x02;
-		pci_write_config8(PCI_DEV(0, 0x1f, 0), 0xbb, tmp);
+		if (MS2290_ENABLE_GPI12)
+			gpi_route_interrupt(12, GPI_IS_SCI);
 		break;
 	case APM_CNT_ACPI_DISABLE:
-		tmp = pci_read_config8(PCI_DEV(0, 0x1f, 0), 0xbb);
-		tmp &= ~0x03;
-		tmp |= 0x01;
-		pci_write_config8(PCI_DEV(0, 0x1f, 0), 0xbb, tmp);
+		if (MS2290_ENABLE_GPI12)
+			gpi_route_interrupt(12, GPI_IS_SMI);
 		break;
 	default:
 		break;
