@@ -137,8 +137,11 @@ static void mainboard_smi_handle_ec_sci(void)
 
 void mainboard_smi_gpi(u32 gpi_sts)
 {
-	if (gpi_sts & (1 << 1))
+	printk(BIOS_DEBUG, "smi_gpi: %x\n", gpi_sts);
+	if (gpi_sts & (1 << 1)) {
+		printk(BIOS_DEBUG, "smi_gpi: calling ec_sci()\n", gpi_sts);
 		mainboard_smi_handle_ec_sci();
+	}
 }
 
 static int mainboard_finalized = 0;
