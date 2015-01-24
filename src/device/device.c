@@ -13,6 +13,7 @@
  * (Written by Yinghai Lu <yhlu@tyan.com> for Tyan)
  * Copyright (C) 2005-2006 Stefan Reinauer <stepan@openbios.org>
  * Copyright (C) 2009 Myles Watson <mylesgw@gmail.com>
+ * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
  */
 
 /*
@@ -685,6 +686,25 @@ static void constrain_resources(struct device *dev, struct constraints* limits)
 	}
 }
 
+/*
+ * In this function there is a provision to shrink the potential PCI address
+ * space to the resource specified value.
+ *
+ * Without this the PCI address space attempts to reserve roughly all 32-bit
+ * addressable RAM, leading to allocation below the AMD fixed resource window
+ * instead of above it.  When allocated below the fixed resource window it
+ * is not protected by the e820 map and the PCI configuration is overwritten,
+ * causing all PCI devices to become unusable!
+ *
+ * This bug is only exposed when the top of system RAM touches the bottom of
+ * the fixed resource window.  If less than ~3.5GB of memory is installed there
+ * is a gap between system RAM and the fixed resource window which protects
+ * the incorrectly allocated PCI configuration registers and hides this bug.
+ *
+ * On non-AMD systems this may not matter as much, but the code below is generic
+ * and should not harm other systems.
+ */
+
 static void avoid_fixed_resources(struct device *dev)
 {
 	struct constraints limits;
@@ -712,6 +732,12 @@ static void avoid_fixed_resources(struct device *dev)
 		if ((res->flags & MEM_MASK) == MEM_TYPE &&
 		    (res->limit < limits.mem.limit))
 			limits.mem.limit = res->limit;
+		/* Shrink PCI address space */
+		if ((res->flags & MEM_MASK) == MEM_TYPE &&
+		    (res->size < (limits.mem.limit - limits.mem.base + 1))) {
+			limits.mem.base = (limits.mem.limit - res->size + 1);
+			limits.mem.size = res->size;
+		}
 		if ((res->flags & IO_MASK) == IO_TYPE &&
 		    (res->limit < limits.io.limit))
 			limits.io.limit = res->limit;
