@@ -1,6 +1,8 @@
 /*
  * This file is part of the coreboot project.
  *
+ * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
+ *
  * Copyright (C) 2007 Advanced Micro Devices, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -94,9 +96,15 @@ void setup_resource_map_x_offset(const u32 *register_values, u32 max, u32 offset
 			dev = (register_values[i+1] & ~0xfff) + offset_pci_dev;
 			where = register_values[i+1] & 0xfff;
 			reg = pci_read_config32(dev, where);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "WAS: %08x\n", reg);
+#endif
 			reg &= register_values[i+2];
 			reg |= register_values[i+3];
 			pci_write_config32(dev, where, reg);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "NOW: %08x\n", reg);
+#endif
 			}
 			break;
 		case RES_PORT_IO_8: // io 8
@@ -105,9 +113,15 @@ void setup_resource_map_x_offset(const u32 *register_values, u32 max, u32 offset
 			u32 reg;
 			where = register_values[i+1] + offset_io_base;
 			reg = inb(where);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "WAS: %08x\n", reg);
+#endif
 			reg &= register_values[i+2];
 			reg |= register_values[i+3];
 			outb(reg, where);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "NOW: %08x\n", reg);
+#endif
 			}
 			break;
 		case RES_PORT_IO_32:  //io32
@@ -116,9 +130,15 @@ void setup_resource_map_x_offset(const u32 *register_values, u32 max, u32 offset
 			u32 reg;
 			where = register_values[i+1] + offset_io_base;
 			reg = inl(where);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "WAS: %08x\n", reg);
+#endif
 			reg &= register_values[i+2];
 			reg |= register_values[i+3];
 			outl(reg, where);
+#if RES_DEBUG
+			printk(BIOS_DEBUG, "NOW: %08x\n", reg);
+#endif
 			}
 			break;
 		} // switch
