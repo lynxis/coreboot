@@ -1,6 +1,7 @@
 /*
  * This file is part of the coreboot project.
  *
+ * Copyright (C) 2015 Timothy Pearson <tpearson@raptorengineeringinc.com>, Raptor Engineering
  * Copyright (C) 2007 Advanced Micro Devices, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -322,7 +323,7 @@ static void recalculateVsSlamTimeSettingOnCorePre(device_t dev)
 
 	/* Get PSmax's index */
 	msr = rdmsr(0xC0010061);
-	bValue = (u8) ((msr.lo >> PS_MAX_VAL_SHFT) & BIT_MASK_3);
+	bValue = (u8) (((msr.lo >> PS_MAX_VAL_SHFT) & BIT_MASK_3) - 1);
 
 	/* Get PSmax's VID */
 	msr = rdmsr(0xC0010064 + bValue);
