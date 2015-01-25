@@ -868,28 +868,18 @@ static void set_pci_ops(struct device *dev)
 	/* If I don't have a specific driver use the default operations. */
 	switch (dev->hdr_type & 0x7f) {	/* Header type */
 	case PCI_HEADER_TYPE_NORMAL:
-		if ((dev->class >> 8) == PCI_CLASS_BRIDGE_PCI)
-			goto bad;
-		dev->ops = &default_pci_ops_dev;
+		if ((dev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
+			dev->ops = &default_pci_ops_dev;
 		break;
 	case PCI_HEADER_TYPE_BRIDGE:
-		if ((dev->class >> 8) != PCI_CLASS_BRIDGE_PCI)
-			goto bad;
-		dev->ops = get_pci_bridge_ops(dev);
+		if ((dev->class >> 8) == PCI_CLASS_BRIDGE_PCI)
+			bad; dev->ops = get_pci_bridge_ops(dev);
 		break;
 #if CONFIG_CARDBUS_PLUGIN_SUPPORT
 	case PCI_HEADER_TYPE_CARDBUS:
 		dev->ops = &default_cardbus_ops_bus;
 		break;
 #endif
-default:
-bad:
-		if (dev->enabled) {
-			printk(BIOS_ERR, "%s [%04x/%04x/%06x] has unknown "
-			       "header type %02x, ignoring.\n", dev_path(dev),
-			       dev->vendor, dev->device,
-			       dev->class >> 8, dev->hdr_type);
-		}
 	}
 }
 
