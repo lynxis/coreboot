@@ -36,29 +36,6 @@ void enable_int_gfx(void);
 /* GPIO6. */
 void enable_int_gfx(void)
 {
-	u8 byte;
-
-	volatile u8 *gpio_reg;
-
-	pm_iowrite(0xEA, 0x01);	/* diable the PCIB */
-	/* Disable Gec */
-	byte = pm_ioread(0xF6);
-	byte |= 1;
-	pm_iowrite(0xF6, byte);
-	/* make sure the fed80000 is accessible */
-	byte = pm_ioread(0x24);
-	byte |= 1;
-	pm_iowrite(0x24, byte);
-
-	gpio_reg = (volatile u8 *)0xFED80000 + 0xD00; /* IoMux Register */
-
-	*(gpio_reg + 0x6) = 0x1; /* Int_vga_en */
-	*(gpio_reg + 170) = 0x1; /* gpio_gate */
-
-	gpio_reg = (volatile u8 *)0xFED80000 + 0x100; /* GPIO Registers */
-
-	*(gpio_reg + 0x6) = 0x8;
-	*(gpio_reg + 170) = 0x0;
 }
 
 /*
@@ -67,24 +44,12 @@ void enable_int_gfx(void)
  ***/
 void set_pcie_dereset(void)
 {
-	/* GPIO 50h reset PCIe slot */
-
-	u8 *addr = (u8 *)(0xFED80000 + 0x100 + 0x50);
-	u8 byte = ~(1 << 5);
-	byte |= ~(1 << 6);
-	*addr = byte;
-
 }
 
 void set_pcie_reset(void)
 {
-	/* GPIO 50h reset PCIe slot */
-
-	u8 *addr = (u8 *)(0xFED80000 + 0x100 + 0x50);
-	u8 byte = ~((1 << 5) | (1 << 6));
-	*addr = byte;
-
 }
+
 u8 is_dev3_present(void)
 {
 	return 0;
