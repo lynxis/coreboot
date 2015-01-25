@@ -1208,6 +1208,7 @@ unsigned int pci_scan_bus(struct bus *bus, unsigned min_devfn,
 	 * Probe all devices/functions on this bus with some optimization for
 	 * non-existence and single function devices.
 	 */
+  printk(BIOS_WARNING, "LYNXIS: min_fn %d,max_fn %d\n", min_devfn, max_devfn);
 	for (devfn = min_devfn; devfn <= max_devfn; devfn++) {
 		struct device *dev;
 
@@ -1225,6 +1226,11 @@ unsigned int pci_scan_bus(struct bus *bus, unsigned min_devfn,
 		 * not present don't waste time probing another function.
 		 * Skip to next device.
 		 */
+    if (dev) {
+	    printk(BIOS_WARNING, "LYNXIS after %x %x %s %s\n", dev->vendor, dev->device, dev_path(dev), dev_name(dev));
+    } else {
+      printk(BIOS_WARNING, "LYNXIS dev = null devfn %x\n", devfn);
+    }
 		if ((PCI_FUNC(devfn) == 0x00) && (!dev
 		     || (dev->enabled && ((dev->hdr_type & 0x80) != 0x80)))) {
 			devfn += 0x07;
