@@ -1044,7 +1044,7 @@ device_t pci_probe_dev(device_t dev, struct bus *bus, unsigned devfn)
 	print_func_entry();
 	u32 id, class;
 	u8 hdr_type;
-
+  printk(BIOS_WARNING, "PCI_PROBE: dev %p @bus %p\n", dev, bus);
 	/* Detect if a device is present. */
 	if (!dev) {
 		struct device dummy;
@@ -1058,6 +1058,7 @@ device_t pci_probe_dev(device_t dev, struct bus *bus, unsigned devfn)
 		 * Have we found something? Some broken boards return 0 if a
 		 * slot is empty, but the expected answer is 0xffffffff.
 		 */
+    printk(BIOS_WARNING, "PCI_PROBE: id %x\n", id);
 		if (id == 0xffffffff) {
 			print_func_exit();
 			return NULL;
@@ -1089,6 +1090,7 @@ device_t pci_probe_dev(device_t dev, struct bus *bus, unsigned devfn)
 
 		/* Now read the vendor and device ID. */
 		id = pci_read_config32(dev, PCI_VENDOR_ID);
+    printk(BIOS_WARNING, "pci_probe: (dev given) id %x\n", id);
 
 		/*
 		 * If the device does not have a PCI ID disable it. Possibly
