@@ -20,7 +20,7 @@
  */
 
 
-#define RES_DEBUG 0
+#define RES_DEBUG 1
 
 static void setup_resource_map(const u32 *register_values, u32 max)
 {
