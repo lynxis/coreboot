@@ -1044,7 +1044,7 @@ device_t pci_probe_dev(device_t dev, struct bus *bus, unsigned devfn)
 	print_func_entry();
 	u32 id, class;
 	u8 hdr_type;
-  printk(BIOS_WARNING, "PCI_PROBE: dev %p @bus %p devfn %x\n", dev, bus, devfn);
+  printk(BIOS_WARNING, "PCI_PROBE: dev %p @bus %p\n", dev, bus);
 	/* Detect if a device is present. */
 	if (!dev) {
 		struct device dummy;
@@ -1191,6 +1191,7 @@ unsigned int pci_scan_bus(struct bus *bus, unsigned min_devfn,
 #else
 	printk(BIOS_DEBUG, "PCI: pci_scan_bus for bus %02x\n", bus->secondary);
 #endif
+
 	/* Maximum sane devfn is 0xFF. */
 	if (max_devfn > 0xff) {
 		printk(BIOS_ERR, "PCI: pci_scan_bus limits devfn %x - "
@@ -1210,39 +1211,33 @@ unsigned int pci_scan_bus(struct bus *bus, unsigned min_devfn,
 	 * non-existence and single function devices.
 	 */
   printk(BIOS_WARNING, "LYNXIS: min_fn %d,max_fn %d\n", min_devfn, max_devfn);
-  if (bus->secondary == 0x0) {
-    for (devfn = min_devfn; devfn <= max_devfn; devfn++) {
-      struct device *dev;
+	for (devfn = min_devfn; devfn <= max_devfn; devfn++) {
+		struct device *dev;
 
-      /* First thing setup the device structure. */
-      printk(BIOS_WARNING, "LYNXIS scan_get devfn %x.\n", devfn);
-      dev = pci_scan_get_dev(&old_devices, devfn);
+		/* First thing setup the device structure. */
+	  printk(BIOS_WARNING, "LYNXIS scan_get devfn %x.\n", devfn);
+		dev = pci_scan_get_dev(&old_devices, devfn);
 
-      /* See if a device is present and setup the device structure. */
-      printk(BIOS_WARNING, "LYNXIS dev %p\n", dev);
-      if (dev)
-        printk(BIOS_WARNING, "LYNXIS pci_scan_get_dev returned %x %x %s %s\n", dev->vendor, dev->device, dev_path(dev), dev_name(dev));
-      else
-        printk(BIOS_WARNING, "LYNXIS pci_scan_get_dev returned NULL\n");
-      printk(BIOS_WARNING, "LYNXIS: dev %p bus %p devfn %x\n", dev, bus, devfn);
-      dev = pci_probe_dev(dev, bus, devfn);
+		/* See if a device is present and setup the device structure. */
+    printk(BIOS_WARNING, "LYNXIS dev %p\n", dev);
+	  printk(BIOS_WARNING, "LYNXIS pci_probe_dev %x %x %s %s\n", dev->vendor, dev->device, dev_path(dev), dev_name(dev));
+		dev = pci_probe_dev(dev, bus, devfn);
 
-      /*
-      * If this is not a multi function device, or the device is
-      * not present don't waste time probing another function.
-      * Skip to next device.
-      */
-      if (dev) {
-        printk(BIOS_WARNING, "LYNXIS after %x %x %s %s\n", dev->vendor, dev->device, dev_path(dev), dev_name(dev));
-      } else {
-        printk(BIOS_WARNING, "LYNXIS after dev = null devfn %x\n", devfn);
-      }
-      if ((PCI_FUNC(devfn) == 0x00) && (!dev
-          || (dev->enabled && ((dev->hdr_type & 0x80) != 0x80)))) {
-        devfn += 0x07;
-      }
+		/*
+		 * If this is not a multi function device, or the device is
+		 * not present don't waste time probing another function.
+		 * Skip to next device.
+		 */
+    if (dev) {
+	    printk(BIOS_WARNING, "LYNXIS after %x %x %s %s\n", dev->vendor, dev->device, dev_path(dev), dev_name(dev));
+    } else {
+      printk(BIOS_WARNING, "LYNXIS dev = null devfn %x\n", devfn);
     }
-  }
+		if ((PCI_FUNC(devfn) == 0x00) && (!dev
+		     || (dev->enabled && ((dev->hdr_type & 0x80) != 0x80)))) {
+			devfn += 0x07;
+		}
+	}
 
 	printk(BIOS_WARNING, "LYNXIS PostCode 0x25.\n");
 	post_code(0x25);
