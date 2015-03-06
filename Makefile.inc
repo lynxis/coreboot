@@ -269,6 +269,8 @@ additional-dirs := $(objutil)/cbfstool $(objutil)/romcc $(objutil)/ifdtool \
 		   $(objutil)/ifdfake $(objutil)/options $(objutil)/fletcher \
 		   $(objutil)/cbootimage
 
+DATE=$(shell if git update-index -q --refresh >/dev/null; git diff-index --quiet HEAD; then git log --date=local --pretty=format:%ct -1; else date +%s ; fi)
+
 #######################################################################
 # generate build support files
 $(obj)/build.h: .xcompile
@@ -278,26 +280,20 @@ $(obj)/build.h: .xcompile
 	printf "#ifndef __BUILD_H\n" >> $(obj)/build.ht
 	printf "#define __BUILD_H\n\n" >> $(obj)/build.ht
 	printf "#define COREBOOT_VERSION \"$(KERNELVERSION)\"\n" >> $(obj)/build.ht
-	if git update-index -q --refresh >/dev/null; git diff-index --quiet HEAD; then \
-	   printf "/* `LANG= TZ=UTC git log --date=local --pretty=format:%cd -1` UTC */\n" >> $(obj)/build.ht; \
-	   printf "#define COREBOOT_VERSION_TIMESTAMP `LANG= git log --pretty=format:%ct -1`\n" >> $(obj)/build.ht; \
-	else \
-	   printf "/* `LANG= TZ=UTC date` */\n" >> $(obj)/build.ht; \
-	   printf "#define COREBOOT_VERSION_TIMESTAMP `LANG= date +%s`\n" >> $(obj)/build.ht; \
-        fi
+	printf "#define COREBOOT_VERSION_TIMESTAMP `LANG= date -d @$(DATE) +%s`\n" >> $(obj)/build.ht; \
 	printf "#define COREBOOT_ORIGIN_GIT_REVISION \"`LANG= git log remotes/origin/master -1 --format=format:%h`\"\n" >> $(obj)/build.ht
 	printf "#define COREBOOT_EXTRA_VERSION \"$(COREBOOT_EXTRA_VERSION)\"\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_BUILD \"`LANG= date`\"\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_BUILD_YEAR_BCD 0x`LANG= date +"%y"`\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_BUILD_MONTH_BCD 0x`LANG= date +"%m"`\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_BUILD_DAY_BCD 0x`LANG= date +"%d"`\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_BUILD_WEEKDAY_BCD 0x`LANG= date +"%w"`\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_DMI_DATE \"`LANG= date +"%m/%d/%Y"`\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_BUILD \"`LANG= date -d @$(DATE)`\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_BUILD_YEAR_BCD 0x`LANG= date -d @$(DATE) +"%y"`\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_BUILD_MONTH_BCD 0x`LANG= date -d @$(DATE) +"%m"`\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_BUILD_DAY_BCD 0x`LANG= date -d @$(DATE) +"%d"`\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_BUILD_WEEKDAY_BCD 0x`LANG= date -d @$(DATE) +"%w"`\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_DMI_DATE \"`LANG= date -d @$(DATE) +"%m/%d/%Y"`\"\n" >> $(obj)/build.ht
 	printf "\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_COMPILE_TIME \"`LANG= date +%T`\"\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_COMPILE_BY \"$(subst \,@,$(shell PATH=$$PATH:/usr/ucb whoami))\"\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_COMPILE_HOST \"$(shell hostname -s 2>/dev/null || hostname 2>/dev/null)\"\n" >> $(obj)/build.ht
-	printf "#define COREBOOT_COMPILE_DOMAIN \"$(shell test `uname -s` = "Linux" && dnsdomainname || domainname 2>/dev/null)\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_COMPILE_TIME \"`LANG= date -d @$(DATE) +%T`\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_COMPILE_BY \"builduser\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_COMPILE_HOST \"buildhost\"\n" >> $(obj)/build.ht
+	printf "#define COREBOOT_COMPILE_DOMAIN \"builddomain\"\n" >> $(obj)/build.ht
 	printf "#endif\n" >> $(obj)/build.ht
 	mv $(obj)/build.ht $(obj)/build.h
 
