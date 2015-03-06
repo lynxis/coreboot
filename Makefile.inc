@@ -278,7 +278,7 @@ $(obj)/build.h: .xcompile
 	printf "#ifndef __BUILD_H\n" >> $(obj)/build.ht
 	printf "#define __BUILD_H\n\n" >> $(obj)/build.ht
 	printf "#define COREBOOT_VERSION \"$(KERNELVERSION)\"\n" >> $(obj)/build.ht
-	if git update-index -q --refresh >/dev/null; ! git diff-index --quiet HEAD; then \
+	if git update-index -q --refresh >/dev/null; git diff-index --quiet HEAD; then \
 	   printf "/* `LANG= TZ=UTC git log --date=local --pretty=format:%cd -1` UTC */\n" >> $(obj)/build.ht; \
 	   printf "#define COREBOOT_VERSION_TIMESTAMP `LANG= git log --pretty=format:%ct -1`\n" >> $(obj)/build.ht; \
 	else \
