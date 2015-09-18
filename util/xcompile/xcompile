@@ -289,7 +289,7 @@ arch_config_x86() {
 }
 
 arch_config_mipseb() {
-	TARCH="mips"
+	TARCH="mipseb"
 	TBFDARCHS="tradbigmips bigmips"
 	TCLIST="mipseb"
 	TWIDTH="32"

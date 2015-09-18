@@ -61,10 +61,12 @@ ARCHDIR-arm	:= arm
 ARCHDIR-arm64	:= arm64
 ARCHDIR-riscv	:= riscv
 ARCHDIR-mips	:= mips
+ARCHDIR-mipseb	:= mipseb
 
 CFLAGS_arm      +=
 CFLAGS_arm64    += -mgeneral-regs-only
 CFLAGS_mips	+= -mips32r2 -G 0 -mno-abicalls -fno-pic
+CFLAGS_mipseb	+= -mips32r2 -G 0 -mno-abicalls -fno-pic
 CFLAGS_riscv	+=
 CFLAGS_x86_32	+=
 CFLAGS_x86_64   += -mcmodel=large -mno-red-zone
@@ -85,6 +87,7 @@ CFLAGS_x86_64   += -mcmodel=large -mno-red-zone
 CFLAGS_arm	+= -Wstack-usage=1536
 CFLAGS_arm64	+= -Wstack-usage=1536
 CFLAGS_mips	+= -Wstack-usage=1536
+CFLAGS_mipseb	+= -Wstack-usage=1536
 CFLAGS_riscv	+= -Wstack-usage=1536
 
 toolchain_to_dir = \

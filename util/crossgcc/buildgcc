@@ -545,7 +545,7 @@ case "$TARGETARCH" in
 	x86_64*)	TARGETARCH=x86_64-elf;;
 	i386-elf)	;;
 	i386-mingw32)	;;
-	mipseb-elf)	;;
+	mipseb-elf)	TARGETARCH=mips-elf;;
 	mipsel-elf)	;;
 	riscv-elf)	;;
 	i386*)		TARGETARCH=i386-elf;;
