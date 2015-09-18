@@ -180,6 +180,14 @@ detect_special_flags() {
 		  "$LDFLAGS --fix-cortex-a53-843419" && \
 		  LDFLAGS_ARM64_A53_ERRATUM_843419+=" --fix-cortex-a53-843419"
 		;;
+	mipseb)
+		testcc "$GCC" "$CFLAGS_GCC -mno-abicalls -fno-pic" && \
+		  CFLAGS_GCC+=" -mno-abicalls -fno-pic"
+
+                # Enforce big endian mode.
+		testcc "$GCC" "$CFLAGS_GCC -EB" && \
+		  CFLAGS_GCC+=" -EB"
+		;;
 	mipsel)
 		testcc "$GCC" "$CFLAGS_GCC -mno-abicalls -fno-pic" && \
 		  CFLAGS_GCC+=" -mno-abicalls -fno-pic"
@@ -235,7 +243,7 @@ EOF
 }
 
 # Architecture definitions
-SUPPORTED_ARCHITECTURES="arm arm64 mipsel riscv x64 x86"
+SUPPORTED_ARCHITECTURES="arm arm64 mipseb mipsel riscv x64 x86"
 
 arch_config_arm() {
 	TARCH="arm"
@@ -278,6 +286,16 @@ arch_config_x86() {
 	TWIDTH="32"
 	TABI="elf"
 	CC_RT_EXTRA_GCC="--wrap __divdi3 --wrap __udivdi3 --wrap __moddi3 --wrap __umoddi3"
+}
+
+arch_config_mipseb() {
+	TARCH="mips"
+	TBFDARCHS="tradbigmips bigmips"
+	TCLIST="mipseb"
+	TWIDTH="32"
+	TSUPP="mips mipseb"
+	TABI="elf"
+	TENDIAN="EB"
 }
 
 arch_config_mipsel() {

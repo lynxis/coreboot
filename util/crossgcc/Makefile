@@ -2,13 +2,13 @@
 BUILD_PLATFORM ?= i386-elf
 
 all:
-	$(MAKE) BUILDGCC_OPTIONS=-t build-i386 build-x64 build-armv7a build-mips build-riscv build-aarch64 \
+	$(MAKE) BUILDGCC_OPTIONS=-t build-i386 build-x64 build-armv7a build-mips build-mipseb build-riscv build-aarch64 \
 	        build_clang
 	$(MAKE) clean_tempfiles
 
 all_without_gdb:
 	$(MAKE) BUILDGCC_OPTIONS=-t build-i386-without-gdb build-x64-without-gdb build-armv7a-without-gdb \
-	        build-mips-without-gdb build-riscv-without-gdb build-aarch64-without-gdb build_clang
+	        build-mips-without-gdb build-mipseb-without-gdb build-riscv-without-gdb build-aarch64-without-gdb build_clang
 	$(MAKE) clean_tempfiles
 
 build_tools: build_gcc build_iasl build_gdb
@@ -47,6 +47,9 @@ build-aarch64:
 build-mips:
 	@$(MAKE) build_tools BUILD_PLATFORM=mipsel-elf
 
+build-mipseb:
+	@$(MAKE) build_tools BUILD_PLATFORM=mipseb-elf
+
 build-riscv:
 	@$(MAKE) build_tools BUILD_PLATFORM=riscv-elf
 
@@ -67,6 +70,9 @@ build-aarch64-without-gdb:
 build-mips-without-gdb:
 	@$(MAKE) build_tools_without_gdb BUILD_PLATFORM=mipsel-elf
 
+build-mipseb-without-gdb:
+	@$(MAKE) build_tools_without_gdb BUILD_PLATFORM=mipseb-elf
+
 build-riscv-without-gdb:
 	@$(MAKE) build_tools_without_gdb BUILD_PLATFORM=riscv-elf
 
@@ -86,5 +92,6 @@ distclean: clean
 
 .PHONY: build_gcc build_iasl build_gdb build_tools build_tools_without_gdb \
 	build-i386-without-gdb build-x64-without-gdb build-armv7a-without-gdb \
-	build-aarch64-without-gdb build-mips-without-gdb build-riscv-without-gdb \
+	build-aarch64-without-gdb build-mips-without-gdb build-mipseb-without-gdb \
+	build-riscv-without-gdb \
 	all build clean distclean clean_tempfiles all_without_gdb
