@@ -142,6 +142,7 @@ endef
 # initialize standard toolchain (CC,AS and others) for give stage
 # @1 : stage for which the toolchain is to be initialized
 init_standard_toolchain = \
+	$(echo $(1) >> /tmp/fa ) \
 	$(eval $(call set_stage_toolchain,$(1))) \
 	$(eval $(call create_class_compiler,$(1),$(ARCH-$(1)-y)))
 

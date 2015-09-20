@@ -291,7 +291,7 @@ arch_config_x86() {
 arch_config_mipseb() {
 	TARCH="mipseb"
 	TBFDARCHS="tradbigmips bigmips"
-	TCLIST="mipseb"
+	TCLIST="mips"
 	TWIDTH="32"
 	TSUPP="mips mipseb"
 	TABI="elf"

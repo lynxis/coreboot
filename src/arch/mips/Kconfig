@@ -38,3 +38,24 @@ config ARCH_ROMSTAGE_MIPS
 config ARCH_RAMSTAGE_MIPS
 	bool
 	default n
+
+config ARCH_MIPSEB
+	bool
+	default n
+
+config ARCH_BOOTBLOCK_MIPSEB
+	bool
+	default n
+	select ARCH_MIPSEB
+
+config ARCH_VERSTAGE_MIPSEB
+	bool
+	default n
+
+config ARCH_ROMSTAGE_MIPSEB
+	bool
+	default n
+
+config ARCH_RAMSTAGE_MIPSEB
+	bool
+	default n
