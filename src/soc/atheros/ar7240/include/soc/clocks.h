@@ -85,4 +85,7 @@ struct pll_parameters {
 
 int ath7240_set_pll(struct pll_parameters *params);
 
+int get_count_mhz_freq(void);
+int ar71xx_get_ref_clock_mhz(void);
+
 #endif
