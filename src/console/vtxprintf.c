@@ -11,7 +11,9 @@
 #define call_tx(x) tx_byte(x, data)
 
 #if !CONFIG_ARCH_MIPS
+#if !CONFIG_ARCH_MIPSEB
 #define SUPPORT_64BIT_INTS
+#endif
 #endif
 
 /* haha, don't need ctype.c */
