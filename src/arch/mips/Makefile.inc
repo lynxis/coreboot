@@ -22,7 +22,7 @@
 # MIPS specific options
 ###############################################################################
 
-ifeq ($(CONFIG_ARCH_ROMSTAGE_MIPS)$(CONFIG_ARCH_ROMSTAGE_MIPSEB),y)
+ifeq ($(CONFIG_ARCH_ROMSTAGE_MIPS),y)
 CBFSTOOL_PRE1_OPTS = -m mips -s $(CONFIG_CBFS_SIZE)
 endif
 
@@ -30,7 +30,7 @@ endif
 # bootblock
 ###############################################################################
 
-ifeq ($(CONFIG_ARCH_BOOTBLOCK_MIPS)$(CONFIG_ARCH_ROMSTAGE_MIPSEB),y)
+ifeq ($(CONFIG_ARCH_BOOTBLOCK_MIPS),y)
 
 bootblock-y += boot.c
 bootblock-y += bootblock.S
@@ -52,13 +52,13 @@ $(objcbfs)/bootblock.debug: $$(bootblock-objs) $(obj)/config.h
 	@printf "    LINK       $(subst $(obj)/,,$(@))\n"
 	$(LD_bootblock) --gc-sections -static -o $@ -L$(obj) -T $(obj)/mainboard/$(MAINBOARDDIR)/memlayout.bootblock.ld --whole-archive --start-group $(filter-out %.ld,$(bootblock-objs)) --end-group
 
-endif # CONFIG_ARCH_BOOTBLOCK_MIPS CONFIG_ARCH_ROMSTAGE_MIPSEB
+endif # CONFIG_ARCH_BOOTBLOCK_MIPS
 
 ###############################################################################
 # romstage
 ###############################################################################
 
-ifeq ($(CONFIG_ARCH_ROMSTAGE_MIPS)$(CONFIG_ARCH_ROMSTAGE_MIPSEB),y)
+ifeq ($(CONFIG_ARCH_ROMSTAGE_MIPS),y)
 
 romstage-y += boot.c
 romstage-y += cache.c
@@ -72,13 +72,13 @@ $(objcbfs)/romstage.debug: $$(romstage-objs)
 	@printf "    LINK       $(subst $(obj)/,,$(@))\n"
 	$(LD_romstage) --gc-sections -static -o $@ -L$(obj) -T $(obj)/mainboard/$(MAINBOARDDIR)/memlayout.romstage.ld --whole-archive --start-group $(filter-out %.ld,$(romstage-objs)) --end-group
 
-endif # CONFIG_ARCH_ROMSTAGE_MIPS CONFIG_ARCH_ROMSTAGE_MIPSEB
+endif # CONFIG_ARCH_ROMSTAGE_MIPS
 
 ###############################################################################
 # ramstage
 ###############################################################################
 
-ifeq ($(CONFIG_ARCH_RAMSTAGE_MIPS)$(CONFIG_ARCH_RAMSTAGE_MIPSEB),y)
+ifeq ($(CONFIG_ARCH_RAMSTAGE_MIPS),y)
 
 ramstage-y += ashldi3.c
 ramstage-y += boot.c
@@ -96,4 +96,4 @@ $(objcbfs)/ramstage.debug: $$(ramstage-objs)
 	@printf "    CC         $(subst $(obj)/,,$(@))\n"
 	$(LD_ramstage) --gc-sections -static -o $@ -L$(obj) -T $(obj)/mainboard/$(MAINBOARDDIR)/memlayout.ramstage.ld --whole-archive --start-group $(filter-out %.ld,$(ramstage-objs)) --end-group
 
-endif # CONFIG_ARCH_RAMSTAGE_MIPS CONFIG_ARCH_RAMSTAGE_MIPSEB
+endif # CONFIG_ARCH_RAMSTAGE_MIPS
