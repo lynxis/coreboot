@@ -19,7 +19,6 @@
 
 #include <arch/cpu.h>
 #include <soc/clocks.h>
-#include <soc/cpu.h>
 #include <arch/io.h>
 #include <stdint.h>
 #include <timer.h>

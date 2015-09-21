@@ -14,7 +14,6 @@
  */
 
 #include <soc/ar71xx_regs.h>
-#include <soc/cpu.h>
 #include <soc/spi.h>
 #include <spi_flash.h>
 #include <spi-generic.h>
