@@ -59,6 +59,7 @@ static void bootblock_mmu_init(void)
 		dram_size -= null_guard_size;
 	}
 
+	/* use config ifdef when something doesnt have sram? */
 	assert(!identity_map(dram_base, dram_size));
-	assert(!identity_map((uint32_t)_sram, _sram_size));
+	//assert(!identity_map((uint32_t)_sram, _sram_size));
 }
