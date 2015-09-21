@@ -1,0 +1,2 @@
+config BOARD_UBIQUITY_NANOSTATION_XM
+	bool "Nanostation XM"
