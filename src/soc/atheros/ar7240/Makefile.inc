@@ -1,0 +1,60 @@
+#
+# This file is part of the coreboot project.
+#
+# Copyright (C) 2015 Alexander Couzens <lynxis@fe80.eu>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; version 2 of
+# the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc.
+#
+
+ifeq ($(CONFIG_CPU_ATHEROS_AR7240),y)
+
+# We enable CBFS_SPI_WRAPPER for Pistachio targets.
+bootblock-y += clocks.c
+bootblock-y += spi.c
+romstage-y += spi.c
+ramstage-y += spi.c
+
+ifeq ($(CONFIG_DRIVERS_UART),y)
+bootblock-$(CONFIG_BOOTBLOCK_CONSOLE) += uart.c
+romstage-y += uart.c
+ramstage-y += uart.c
+endif
+
+bootblock-y += monotonic_timer.c
+
+ramstage-y += cbmem.c
+ramstage-y += monotonic_timer.c
+
+romstage-y += cbmem.c
+romstage-y += ddr1_init.c
+romstage-y += ddr2_init.c
+romstage-y += romstage.c
+romstage-y += monotonic_timer.c
+
+CPPFLAGS_common += -Isrc/soc/atheros/ar7240/include/
+CPPFLAGS_common += -Isrc/soc/atheros/common/include/
+
+# Generate the actual coreboot bootblock code
+$(objcbfs)/bootblock.raw: $(objcbfs)/bootblock.elf
+	@printf "    OBJCOPY    $(subst $(obj)/,,$(@))\n"
+	$(OBJCOPY_bootblock) -O binary $< $@.tmp
+	@mv $@.tmp $@
+
+# Create a complete bootblock which will start up the system
+$(objcbfs)/bootblock.bin: $(objcbfs)/bootblock.raw $(BIMGTOOL)
+	@printf "    BIMGTOOL   $(subst $(obj)/,,$(@))\n"
+	$(BIMGTOOL) $< $@ $(call loadaddr,bootblock)
+
+endif
