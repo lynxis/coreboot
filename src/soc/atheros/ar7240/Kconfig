@@ -32,4 +32,9 @@ config BOOTBLOCK_CPU_INIT
 	string
 	default "soc/atheros/ar7240/bootblock.c"
 
+config CONSOLE_SERIAL_UART_ADDRESS
+        hex
+        depends on DRIVERS_UART
+        default 0xB8020000
+
 endif
