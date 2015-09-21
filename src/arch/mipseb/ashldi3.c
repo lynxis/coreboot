@@ -19,10 +19,6 @@
  * Foundation, Inc.
  */
 
-#ifndef __ORDER_LITTLE_ENDIAN__
-#errror "What endian are you!?"
-#endif
-
 typedef unsigned word_type;
 long long __ashldi3(long long u, word_type b);
 
