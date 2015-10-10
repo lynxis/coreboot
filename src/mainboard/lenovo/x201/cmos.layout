@@ -57,7 +57,7 @@ entries
 395          4       e       6        debug_level
 #399         1       r       0        unused
 
-400          8       h       0        volume
+#400         8       r       0        reserved for century byte
 
 # coreboot config options: southbridge
 408          1       e       1        nmi
@@ -80,6 +80,8 @@ entries
 
 # coreboot config options: northbridge
 424         3       e       10       gfx_uma_size
+#427         1       r       0       unused
+432          8       h       0        volume
 
 #427        557     r       0        unused
 
