@@ -27,7 +27,6 @@ Scope (\_SB)
 		Name(_HID, "ACPI0003")
 		Name(_UID, 0x00)
 		Name(_PCL, Package() { \_SB } )
-
 		Method(_DCK, 1, NotSerialized)
 		{
 			if (Arg0) {
@@ -43,35 +42,44 @@ Scope (\_SB)
 			   Store (0, \_SB.PCI0.LPCB.EC.DKR2)
 			   Store (0, \_SB.PCI0.LPCB.EC.DKR3)
 			}
-			Xor(Arg0, \_SB.PCI0.LPCB.EC.DKR1, Local0)
-			Return (Local0)
+			Return (1) /* Success */
 		}
 
 		Method(_STA, 0, NotSerialized)
 		{
 			Return (\_SB.PCI0.LPCB.EC.DKR1)
 		}
+
+		Method(CHCK, 0, NotSerialized) /* return 1 if docked, 0 if undocked */
+		{
+			if (\_SB.PCI0.LPCB.EC.DKR1) {
+				Return (1)
+			} else {
+				Return (0)
+			}
+		}
 	}
 }
 
 Scope(\_SB.PCI0.LPCB.EC)
 {
-	Method(_Q18, 0, NotSerialized)
+	/* press docking key on the dock -> what event comes in? */
+	Method(_Q18, 0, NotSerialized) /* undocking key on keyboard */
 	{
 		Notify(\_SB.DOCK, 3)
 	}
 
-	Method(_Q45, 0, NotSerialized)
-	{
-		Notify(\_SB.DOCK, 3)
-	}
-
-	Method(_Q58, 0, NotSerialized)
+	Method(_Q45, 0, NotSerialized) /* docking is attached or detached */
 	{
 		Notify(\_SB.DOCK, 0)
 	}
 
-	Method(_Q37, 0, NotSerialized)
+	Method(_Q58, 0, NotSerialized) /* ?? */
+	{
+		Notify(\_SB.DOCK, 0)
+	}
+
+	Method(_Q37, 0, NotSerialized) /* dock event */
 	{
 		Notify(\_SB.DOCK, 0)
 	}
