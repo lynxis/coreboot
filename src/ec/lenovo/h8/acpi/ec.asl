@@ -56,8 +56,8 @@ Device(EC)
 				DCEV, 1,	/* dock event */
 				BYNA, 1,	/* Bay is not attached */
 				BYHD, 1,	/* HDD in the bay */
-		Offset (0x48),
-				    , 5,
+		Offset (0x49),
+				    , 1,
 				DCAT, 1,	/* Dock attached */
 		Offset (0x4e),
 				WAKE, 16,
