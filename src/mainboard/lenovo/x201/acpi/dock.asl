@@ -68,23 +68,33 @@ Scope (\_SB)
 Scope(\_SB.PCI0.LPCB.EC)
 {
 	/* press docking key on the dock -> what event comes in? */
-	Method(_Q18, 0, NotSerialized) /* undocking key on keyboard */
+	/* Method(_Q18, 0, NotSerialized) */ /* undocking key on keyboard - CHECKED */
+	/* { */
+		/* Notify(\_SB.DOCK, 3) */
+	/* } */
+
+	/* Method(_Q45, 0, NotSerialized) */ /* docking is attached or detached */
+	/* { */
+	/*	Notify(\_SB.DOCK, 0)*/
+	/* } */
+
+	Method(_Q50, 0, NotSerialized) /* docking button on the side is pressed */
 	{
-		Notify(\_SB.DOCK, 3)
+		/* check if dock is present, if so, detached, otherwise attach */
+		if (\_SB.DOCK._STA) {
+			Notify(\_SB.DOCK, 3) /* eject */
+		} else {
+			Notify(\_SB.DOCK, 0) /* check bus / attach */
+		}
 	}
 
-	Method(_Q45, 0, NotSerialized) /* docking is attached or detached */
-	{
-		Notify(\_SB.DOCK, 0)
-	}
-
-	Method(_Q58, 0, NotSerialized) /* ?? */
-	{
-		Notify(\_SB.DOCK, 0)
-	}
-
-	Method(_Q37, 0, NotSerialized) /* dock event */
-	{
-		Notify(\_SB.DOCK, 0)
-	}
+//	Method(_Q58, 0, NotSerialized) /* ?? */
+//	{
+//		Notify(\_SB.DOCK, 0)
+//	}
+//
+//	Method(_Q37, 0, NotSerialized) /* dock event. generated when putting the dock on the station */
+//	{
+//		Notify(\_SB.DOCK, 0)
+//	}
 }
