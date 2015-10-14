@@ -51,12 +51,12 @@ Device(EC)
 				KBLT, 1,	/* Keyboard Light */
 				    , 2,
 				USPW, 1,	/* USB Power enable */
-		Offset (0x47)
+		Offset (0x47),
 				BYUL, 1,	/* Bay unlocked */
 				DCEV, 1,	/* dock event */
 				BYNA, 1,	/* Bay is not attached */
 				BYHD, 1,	/* HDD in the bay */
-		Offset (0x48)
+		Offset (0x48),
 				    , 5,
 				DCAT, 1,	/* Dock attached */
 		Offset (0x4e),
