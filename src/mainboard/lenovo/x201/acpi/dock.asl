@@ -47,7 +47,11 @@ Scope (\_SB)
 
 		Method(_STA, 0, NotSerialized)
 		{
-			Return (\_SB.PCI0.LPCB.EC.DKR1)
+			if (\_SB.PCI0.LPCB.EC.DCAT) {
+				Return (0)
+			} else {
+				Return (1)
+			}
 		}
 
 		Method(CHCK, 0, NotSerialized) /* return 1 if docked, 0 if undocked */
