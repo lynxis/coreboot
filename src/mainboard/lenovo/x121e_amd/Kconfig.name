@@ -1,0 +1,2 @@
+config BOARD_LENOVO_X121E_AMD
+	bool "ThinkPad X121E AMD"
