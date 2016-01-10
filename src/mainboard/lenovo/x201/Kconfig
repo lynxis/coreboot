@@ -49,4 +49,8 @@ config CPU_ADDR_BITS
 	int
 	default 36
 
+config MAINBOARD_POWER_ON_AFTER_POWER_FAIL
+	bool
+	default n
+
 endif
